@@ -104,6 +104,9 @@ class NameMatcher extends PlantList{
         // nothing starting with a - as it will break solr
         $parts = preg_grep('/^-/', $parts, PREG_GREP_INVERT);
 
+        // now the numbers in the array may be off
+        $parts = array_values($parts);        
+
         $canonical_parts = array(); // this is just the name parts - up to 3 words
         $response->parsedName->rank = null; // if we can find one
         $authors = null;

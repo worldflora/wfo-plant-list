@@ -219,7 +219,8 @@ class TaxonRecord extends PlantList{
             $query = array(
                 'query' => 'wfo_id_s:' . $this->getWfoId(),
                 'sort' => 'classification_id_s asc',
-                'filter' => array('classification_id_s:[* TO *]')
+                'filter' => array('classification_id_s:[* TO *]'),
+                'limit' => 1000
             );
             $this->usages = $this->loadTaxonRecords($query, false);
         }
@@ -278,6 +279,7 @@ class TaxonRecord extends PlantList{
         foreach($usages as $use){
             if($use->getIsName()) continue; // only looking at taxa
             if($use->getClassificationId() == $this->getClassificationId()) break; // reached current times
+            //echo $use->getClassificationId();
             $replaced_by = $use;
         }
 

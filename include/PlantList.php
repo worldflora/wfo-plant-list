@@ -139,7 +139,7 @@ class PlantList{
                     'classifications' => array(
                         "type" => "terms",
                         "field" => "classification_id_s",
-                        'limit' => 100
+                        'limit' => 1000
                 )
                 ),
                 'limit' => '0'

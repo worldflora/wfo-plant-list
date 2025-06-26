@@ -56,7 +56,7 @@ class Classification extends PlantList{
             );
             $response = PlantList::getSolrResponse($query);
 
-            error_log(print_r($response->facets->classification_id_s->buckets, true));
+            //error_log(print_r($response->facets->classification_id_s->buckets, true));
 
             // get out of here if there are no classifications!
             if(!isset($response->facets->classification_id_s->buckets)){

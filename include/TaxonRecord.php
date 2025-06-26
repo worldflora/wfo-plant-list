@@ -862,7 +862,7 @@ class TaxonRecord extends PlantList{
                 );
                 $response = PlantList::getSolrResponse($query);
 
-                error_log(print_r($response, true));
+                // error_log(print_r($response, true));
 
                 // put int he total;
                 $stats[] = new TaxonConceptStat("role-unplaced", "Total names with role:'unplaced'", $response->facets->count);

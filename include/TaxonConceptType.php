@@ -81,11 +81,11 @@ class TaxonConceptType extends ObjectType
                                 'type' => Type::int(),
                                 'description' => 'Maximum number of results to return',
                                 'required' => false,
-                                'default' => 1000
+                                'default' => 100
                             ]
                         ],
                         'resolve' => function($taxon, $args, $context, $info){
-                            $limit = isset($args['limit']) ? $args['limit'] : 1000;
+                            $limit = isset($args['limit']) ? $args['limit'] : 100;
                             $offset = isset($args['offset']) ? $args['offset'] : 0;
                             return $taxon->getUnplacedNames($limit, $offset);
                         },

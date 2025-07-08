@@ -373,7 +373,12 @@ class TaxonRecord extends PlantList{
 
     }
 
-    public function getUnplacedNames(){
+    /**
+     * Paging introduced for performance of Nye's code
+     * Max of 1000 
+     * 
+     */
+    public function getUnplacedNames($limit = 1000, $offset = 0){
 
         if(!$this->exists()) return null;
         if($this->isName) return null;
@@ -384,7 +389,8 @@ class TaxonRecord extends PlantList{
             $query = array(
                 'query' => 'genus_string_s:' . $this->solrDoc->name_string_s,
                 'filter' => array('role_s:unplaced', 'classification_id_s:' . $this->solrDoc->classification_id_s),
-                'limit' => 1000000,
+                'limit' => $limit,
+                'offset' => $offset,
                 'sort' => 'full_name_string_plain_s asc'
             );
 

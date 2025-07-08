@@ -70,7 +70,25 @@ class TaxonConceptType extends ObjectType
                     ],
                     'hasUnplacedName' => [
                         'type' => Type::listOf(TypeRegister::taxonNameType()),
-                        'resolve' => function($taxon){return $taxon->getUnplacedNames(); },
+                        'args' => [
+                            'offset' => [
+                                'type' => Type::int(),
+                                'description' => 'How far through the result set to start.',
+                                'required' => false,
+                                'default' => 0
+                            ],
+                            'limit' => [
+                                'type' => Type::int(),
+                                'description' => 'Maximum number of results to return',
+                                'required' => false,
+                                'default' => 1000
+                            ]
+                        ],
+                        'resolve' => function($taxon, $args, $context, $info){
+                            $limit = isset($args['limit']) ? $args['limit'] : 1000;
+                            $offset = isset($args['offset']) ? $args['offset'] : 0;
+                            return $taxon->getUnplacedNames($limit, $offset);
+                        },
                         'description' => "Names with this genus name that haven't been placed in the taxonomy yet. Only applicable to genera. Returns null for other ranks."
                     ],
                     'isPartOf' => [

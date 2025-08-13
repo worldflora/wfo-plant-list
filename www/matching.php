@@ -124,7 +124,7 @@ if(@$_GET['chosen_wfo']){
 
     // write the rows back to file
     $out = fopen($output_file_path, 'w');
-    foreach($rows as $row) fputcsv($out, $row);
+    foreach($rows as $row) fputcsv($out, $row, escape: "\\");
     fclose($out);
 
     // redirect to continued matching.
@@ -168,7 +168,7 @@ if(@$_GET['matching_mode']){
             $header = array('wfo_id', 'wfo_full_name', 'wfo_check', 'input_name_string');
         }
         
-        fputcsv($out, $header);
+        fputcsv($out, $header, escape: "\\");
 
         if($_SESSION['data_type'] == 'CSV'){
             while($line = fgetcsv($in)){
@@ -179,12 +179,12 @@ if(@$_GET['matching_mode']){
                     array_unshift($line, '', '', '');
                 }
                 
-                fputcsv($out, $line);
+                fputcsv($out, $line, escape: "\\");
             }
         }else{
             while($name = fgets($in)){
                 $line = array('','','',trim($name));
-                fputcsv($out, $line);
+                fputcsv($out, $line, escape: "\\");
             }
         }
         fclose($in);
@@ -379,7 +379,7 @@ if(@$_GET['matching_mode']){
     // rows are now updated - write them to the file.
     // ready for the next call
     $out = fopen($output_file_path, 'w');
-    foreach($rows as $row) fputcsv($out, $row);
+    foreach($rows as $row) fputcsv($out, $row, escape: "\\");
     fclose($out);
 
     echo '</div>';
@@ -816,7 +816,7 @@ function record_choices($row, $response, $header, $candidates_file_path){
         $out = fopen($candidates_file_path, 'w');
         $new_header = $header;
         array_unshift($new_header, 'score');
-        fputcsv($out, $new_header); // add the header
+        fputcsv($out, $new_header, escape: "\\"); // add the header
     }else{
         // it exists so we append to it
         $out = fopen($candidates_file_path, 'a');
@@ -838,7 +838,7 @@ function record_choices($row, $response, $header, $candidates_file_path){
         if(!$new_row[3]) $new_row[3] = $candidate->getRole();
 
         // actually write the row.
-        fputcsv($out, $new_row);
+        fputcsv($out, $new_row, escape: "\\");
 
     }
 

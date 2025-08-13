@@ -116,6 +116,11 @@
     $taxon_name->add('rdfs:Property', $ofTaxonomicRank);
     $ofTaxonomicRank->add('rdfs:range', $graph->resource('wfo:TaxonomicRank'));
 
+    //publicationID
+    $deduplicatedID = $graph->resource('wfo:deduplicatedID');
+    $taxon_name->add('rdfs:Property', $deduplicatedID);
+    $deduplicatedID->add('rdfs:range', $graph->resource('xsd:string'));
+
     $graph->resource('wfo:genus')->add('rdf:type', $graph->resource('wfo:TaxonomicRank'));
     $graph->resource('wfo:family')->add('rdf:type', $graph->resource('wfo:TaxonomicRank'));
     $graph->resource('wfo:species')->add('rdf:type', $graph->resource('wfo:TaxonomicRank'));

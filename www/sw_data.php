@@ -182,6 +182,13 @@ function get_name_resource($graph, $record){
     if($record->getCurrentUsage()){
         $name_resource->add('wfo:currentPreferredUsage', $graph->resource(get_uri($record->getCurrentUsage()->getId())));
     }
+
+    // are there any deduplication IDs associated with it?
+    // deduplicatedID
+    $dedupes = $record->getWfoIdsDeduplicated();
+    foreach ($dedupes as $value) {
+       $name_resource->add('wfo:deduplicatedID', $value);
+    }
     
     $references = $record->getNomenclaturalReferences();
     add_references($references, $name_resource, $graph);

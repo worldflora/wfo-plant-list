@@ -45,7 +45,7 @@ if(file_exists($input_file_path)){
 
     // if we are starting an new output file then put in a header row
     if($offset == 0){
-        fputcsv($out, array('wfo_id', 'full_name', 'reference_type', 'reference_context', 'citation', 'comment', 'url', 'thumbnail_url'));
+        fputcsv($out, array('wfo_id', 'full_name', 'reference_type', 'reference_context', 'citation', 'comment', 'url', 'thumbnail_url'), escape: "\\");
     }else{
         echo "<p>Offset: $offset</p>";
     }
@@ -82,7 +82,7 @@ if(file_exists($input_file_path)){
         $out_line[] = ''; // comment
         $out_line[] = ''; // url
         $out_line[] = ''; // thumbnail
-        fputcsv($out, $out_line);
+        fputcsv($out, $out_line, escape: "\\");
 
 
         // next iterate through the references
@@ -97,7 +97,7 @@ if(file_exists($input_file_path)){
             $out_line[] = $ref->comment; // comment
             $out_line[] = $ref->uri; // url
             $out_line[] = $ref->thumbnailUri; // thumbnail
-            fputcsv($out, $out_line); 
+            fputcsv($out, $out_line, escape: "\\"); 
         }
 
         // page at 1000 ids

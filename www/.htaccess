@@ -9,6 +9,11 @@
 
 RewriteEngine on
 
+# we direct robots.txt to robots.php so that it can
+# give different answers depending if we are on live or staging
+RewriteCond %{REQUEST_URI} !^/robots.txt$
+RewriteRule ^(.+)$ /robots.php [QSA,NC,L]
+
 # everything else goes to index.php with the path as the url
 RewriteCond %{REQUEST_URI} !^/.*\.php$
 RewriteCond %{REQUEST_URI} !^/.*\.png$

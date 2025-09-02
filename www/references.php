@@ -104,23 +104,19 @@ if(file_exists($input_file_path)){
         if($counter > $offset + 1000){
             fclose($in);
             fclose($out);
-            header('Location: references.php?offset=' . $counter);
+            $uri = "references.php?offset={$counter}";
+            echo "<script>window.location = \"$uri\"</script>";
             exit;
         }
-
     }
-
-    // if we get to here then we have complete the loop
-    // and therefore done the input file and can delete it
-    @unlink($input_file_path);
 
 }
 
 ?>
 <h1>Reference Download</h1>
 <p>
-    Once you have match name strings to WFO IDs this tool allows you to download ancillary data associated with those
-    names.
+    Once you have matched name strings to WFO IDs this tool allows you to download ancillary data associated with those
+    names. If you want the core data related to a name use the <a href="expander.php">WFO ID Expander</a>.
 </p>
 <p>
     You upload a CSV file the first column of which must include the WFO IDs (wfo-0123456789). Any values that don't

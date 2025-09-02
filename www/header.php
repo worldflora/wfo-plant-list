@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 
     <meta name="robots" content="noindex">
@@ -167,12 +166,27 @@
                             href="reconcile_index.php">Reconciliation API</a>
                     </li>
 
-
-                    <li class="nav-item">
-                        <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'references.php' ? 'active': '';  ?> "
-                            href="references.php">Refs Tool</a>
+                    <li class="nav-item dropdown">
+                    <a 
+                        class="nav-link dropdown-toggle <?php if (
+                            in_array(basename($_SERVER['PHP_SELF']), array('expander.php', 'references.php')) 
+                            ) echo 'active';  ?>"
+                        href="#"
+                        id="expandersDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Expand
+                    </a>
+                        <ul class="dropdown-menu" aria-labelledby="expandersDropdown">
+                            <li><a 
+                                class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'expander.php' ? 'active': '';  ?>"
+                                href="expander.php">ID Expander</a></li>
+                            <li><a 
+                                class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'references.php' ? 'active': '';  ?> "
+                                href="references.php">Refs Tool</a>
+                            </li>
+                        </ul>
                     </li>
-
                     <li class="nav-item">
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'stats.php' ? 'active': '';  ?> "
                             href="stats.php">Stats</a>

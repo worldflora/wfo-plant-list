@@ -47,7 +47,7 @@ $fields = array(
     'wfo_basionym_name_full' => "The full name string of the basionym name including authors",
     'wfo_parent_name_id' => "The WFO ID of the parent taxon name (if this is an accepted taxon name)",
     'wfo_parent_name_full' => "The full name string of the parent name including authors",
-    'wfo_placement_name_path' => "A forward slash delimited list of names from the root of the classification to this taxon.",
+    'wfo_placement_name_path' => "A forward slash delimited list of names from the root of the classification to this taxon. You can use this to filter the list by higher taxon in Excel or a database but using includes or starts with queries.",
     'wfo_placement_id_path' => "A forward slash delimited list of WFO IDs from the root of the classification to this taxon."
 );
 

@@ -23,12 +23,20 @@ else $selected_fields = array();
 $fields = array(
     'wfo_release' => "The data release this data comes from. It is recommended to always include and cite this.",
     'wfo_prescribed_id' => "The WFO ID that should be used for the name. May differ from supplied WFO ID if the supplied one has been deduplicated.",
+
+    'wfo_persistent_uri' => "The URI that you should use in publications to cite this name. We will attempt to maintain this no matter how the portal and other software evolves.",
+    'wfo_rhakhis_link' => "Useful for taxonomic editors: This links directly to the name page in the Rhakhis taxonomic editor tool (login required).",
+
     'wfo_role' => "Whether the name is accepted, a synonym, unplaced or deprecated",
     'wfo_full_name' => "This is the full name including the authors.",
     'wfo_full_name_html' => "The same as wfo_full_name but with HTML mark up of the different name parts.",
-    'wfo_main_name_part' => "The single word name part of the name e.g. the epithet if this is a species or name if this is a family.",
-    'wfo_genus_name_part' => "The genus name part if this is a bi or trinomial below the rank of genus",
-    'wfo_species_name_part' => "The species name part if this is a trinomial below the rank of species",
+    
+    'wfo_genus' => "The genus name part if this is a bi or trinomial below the rank of genus",
+    'wfo_specific_epithet' => "The species epithet if this is a species or below.",
+    'wfo_subspecific_epithet' => "The subspecific epithet (e.g. subspecies or variety) if this name is below the level of the species.",
+    'wfo_name_string' => "The single word name part of the name e.g. the epithet if this is a species or name if this is a family.",
+    'wfo_trinomial' => "The one, two or three words that make up the name, omitting the rank and authors",
+
     'wfo_name_no_authors' => "The plain name without the author string",
     'wfo_authors' => "The author string for the name",
     'wfo_rank' => "The rank of the name from our controlled vocabulary",
@@ -103,7 +111,7 @@ if(file_exists($input_file_path)){
         $wfo = trim($line[0]);
         
         // skip non compliant WFO IDs or ones that don't load the name
-        if(!preg_match('/^wfo-[0-9]{10}$/', $wfo) || !$name = new TaxonRecord($wfo . '-' . WFO_DEFAULT_VERSION)){
+        if(!preg_match('/^wfo-[0-9]{10}$/', $wfo) || !$name = new TaxonRecord($wfo . '-' . WFO_DEFAULT_VERSION) || !$name->getWfoId()){
             // fill the gaps with empty values.
             $out_line = array_merge($out_line, array_fill(0,count($selected_fields), null));
             fputcsv($out, $out_line, escape: "\\");
@@ -118,6 +126,14 @@ if(file_exists($input_file_path)){
                     case 'wfo_prescribed_id':
                         $out_line[] = $name->getWfoId();
                         break;
+                    case 'wfo_persistent_uri':
+                        $out_line[] = 'https://list.worldfloraonline.org/' . $name->getWfoId();
+                        break;
+                    
+                    case 'wfo_rhakhis_link':
+                        $out_line[] = 'https://list.worldfloraonline.org/rhakhis/ui/index.html#' . $name->getWfoId();
+                        break;
+
                     case 'wfo_role':
                         $out_line[] = $name->getRole();
                         break;
@@ -127,15 +143,43 @@ if(file_exists($input_file_path)){
                     case 'wfo_full_name_html':
                         $out_line[] = $name->getFullNameStringHtml();
                         break;
-                    case 'wfo_main_name_part':
+
+                    case 'wfo_genus':
+                        if($name->getRank() == 'genus'){
+                            $out_line[] = $name->getNameString();
+                        }else{
+                            $out_line[] = $name->getGenusString();
+                        }
+                        break;
+                    case 'wfo_specific_epithet':
+                        if($name->getRank() == 'species'){
+                            $out_line[] = $name->getNameString();
+                        }else{
+                            $out_line[] = $name->getSpeciesString();
+                        }
+                        break;
+
+                    case 'wfo_subspecific_epithet':
+                        if($name->getSpeciesString()){
+                            $out_line[] = $name->getNameString();
+                        }else{
+                            $out_line[] = "";
+                        }
+                        break;
+
+                    case 'wfo_name_string':
                         $out_line[] = $name->getNameString();
                         break;
-                    case 'wfo_genus_name_part':
-                        $out_line[] = $name->getGenusString();
+
+                    case 'wfo_trinomial':
+                        $parts = array();
+                        $parts[] = $name->getGenusString();
+                        $parts[] = $name->getSpeciesString();
+                        $parts[] = $name->getNameString();
+                        $parts = array_filter($parts,'strlen');
+                        $out_line[] = implode(' ', $parts);
                         break;
-                    case 'wfo_species_name_part':
-                        $out_line[] = $name->getSpeciesString();
-                        break;
+
                     case 'wfo_name_no_authors':
                         $out_line[] = $name->getFullNameStringNoAuthorsPlain();
                         break;

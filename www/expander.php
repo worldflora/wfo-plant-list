@@ -111,7 +111,9 @@ if(file_exists($input_file_path)){
         $wfo = trim($line[0]);
         
         // skip non compliant WFO IDs or ones that don't load the name
-        if(!preg_match('/^wfo-[0-9]{10}$/', $wfo) || !$name = new TaxonRecord($wfo . '-' . WFO_DEFAULT_VERSION) || !$name->getWfoId()){
+
+        $name = new TaxonRecord($wfo . '-' . WFO_DEFAULT_VERSION);
+        if(!preg_match('/^wfo-[0-9]{10}$/', $wfo) || !$name || !$name->getWfoId()){
             // fill the gaps with empty values.
             $out_line = array_merge($out_line, array_fill(0,count($selected_fields), null));
             fputcsv($out, $out_line, escape: "\\");

@@ -22,7 +22,7 @@ else $selected_fields = array();
 // we need a list of possible fields to add
 $fields = array(
     'wfo_release' => "The data release this data comes from. It is recommended to always include and cite this.",
-    'wfo_prescribed_id' => "The WFO ID that should be used for the name. May differ from supplied WFO ID if the supplied on has been deduplicated.",
+    'wfo_prescribed_id' => "The WFO ID that should be used for the name. May differ from supplied WFO ID if the supplied one has been deduplicated.",
     'wfo_role' => "Whether the name is accepted, a synonym, unplaced or deprecated",
     'wfo_full_name' => "This is the full name including the authors.",
     'wfo_full_name_html' => "The same as wfo_full_name but with HTML mark up of the different name parts.",
@@ -110,7 +110,7 @@ if(file_exists($input_file_path)){
         }else{
 
             // no other way to do this but manually map the fields to calls on the object
-            foreach($fields as $field_name => $field_description){
+            foreach($selected_fields as $field_name){
                 switch ($field_name) {
                     case 'wfo_release':
                         $out_line[] = WFO_DEFAULT_VERSION;
@@ -242,10 +242,6 @@ if(file_exists($input_file_path)){
             fputcsv($out, $out_line, escape: "\\");
 
         }
-
-        // write the taxon line
-        
-//        fputcsv($out, $out_line, escape: "\\"); 
 
         // page at 1000 ids
         if($counter > $offset + 1000){

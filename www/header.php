@@ -25,6 +25,8 @@
         padding-right: 2em;
     }
 
+        /*
+
     table,
     td,
     th {
@@ -42,7 +44,7 @@
         white-space: nowrap;
     }
 
-    /*
+
     div {
         width: 58em;
         border: solid 1px gray;
@@ -151,21 +153,41 @@
                             href="gql_index.php">GraphQL API</a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'matching.php' ? 'active': '';  ?> "
-                            href="matching.php">Matching Tool</a>
+<!-- Name Matching drop down -->
+                     <li class="nav-item dropdown">
+                    <a 
+                        class="nav-link dropdown-toggle <?php if (
+                            in_array(basename($_SERVER['PHP_SELF']), array('matching.php', 'matching_rest.php', 'reconcile_index.php', 'matching_tettris.php'))) echo 'active';  ?>"
+                        href="#"
+                        id="matchingDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Name Matching
+                    </a>
+                        <ul class="dropdown-menu" aria-labelledby="matchingDropdown">
+                            <li>
+                                <a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'matching.php' ? 'active': '';  ?> "
+                                    href="matching.php">Matching Tool</a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'matching_rest.php' ? 'active': '';  ?> "
+                                    href="matching_rest.php">Matching API</a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'matching_tettris.php' ? 'active': '';  ?> "
+                                    href="matching_tettris.php">TETTRIs API</a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'reconcile_index.php' ? 'active': '';  ?> "
+                                    href="reconcile_index.php">Reconciliation API</a>
+                            </li>
+                        </ul>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'matching_rest.php' ? 'active': '';  ?> "
-                            href="matching_rest.php">Matching API</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'reconcile_index.php' ? 'active': '';  ?> "
-                            href="reconcile_index.php">Reconciliation API</a>
-                    </li>
-
+<!-- Expansion drop down -->
                     <li class="nav-item dropdown">
                     <a 
                         class="nav-link dropdown-toggle <?php if (
@@ -187,6 +209,8 @@
                             </li>
                         </ul>
                     </li>
+
+
                     <li class="nav-item">
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'stats.php' ? 'active': '';  ?> "
                             href="stats.php">Stats</a>

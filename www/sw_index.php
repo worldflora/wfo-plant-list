@@ -79,7 +79,7 @@ A WFO stable URI is created by prepending "https://list.worldfloraonline.org/" t
     Data can be returned in the <?php echo count($formats_supported) ?> formats listed in the table below.
     These include graphical representations of the data.
 </p>
-<table>
+<table class="table table-hover">
 <tr>
     <th>Name</th>
     <th>Recommended Mime Type</th>

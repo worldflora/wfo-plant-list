@@ -21,7 +21,7 @@ require_once('header.php');
 
 </p>
 
-<table>
+<table class="table table-hover">
     <tr>
         <th>Level</th>
         <th>Name (internal)</th>

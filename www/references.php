@@ -52,7 +52,7 @@ if(file_exists($input_file_path)){
 
     // work through the input file
     $counter = 0;
-    while($line = fgetcsv($in)){
+    while($line = fgetcsv($in, escape: "\\")){
 
         $counter++;
         

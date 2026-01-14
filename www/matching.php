@@ -81,7 +81,7 @@ if(@$_GET['chosen_wfo']){
     // read in the whole file.
     $rows = array();
     $in = fopen($output_file_path, 'r');
-    while($row = fgetcsv($in))$rows[] = $row;
+    while($row = fgetcsv($in, escape: "\\"))$rows[] = $row;
     fclose($in);
 
     for($i = 1; $i < count($rows); $i++){
@@ -155,7 +155,7 @@ if(@$_GET['matching_mode']){
 
         if($_SESSION['data_type'] == 'CSV'){
             
-            $header = fgetcsv($in);
+            $header = fgetcsv($in, escape: "\\");
 
             // add the first three rows if they are not already there
             if(preg_match('/wfo_id$/', $header[0])){ // use odd regex to avoid odd excel chars at start of file
@@ -171,7 +171,7 @@ if(@$_GET['matching_mode']){
         fputcsv($out, $header, escape: "\\");
 
         if($_SESSION['data_type'] == 'CSV'){
-            while($line = fgetcsv($in)){
+            while($line = fgetcsv($in, escape: "\\")){
 
                 if(!$is_re_upload){
                     // they haven't uploaded a file with the three cols 
@@ -195,7 +195,7 @@ if(@$_GET['matching_mode']){
     // load the whole thing into memory
     $rows = array();
     $in = fopen($output_file_path, 'r');
-    while($row = fgetcsv($in))$rows[] = $row;
+    while($row = fgetcsv($in, escape: "\\"))$rows[] = $row;
     fclose($in);
 
     // set up the candidates file
@@ -214,7 +214,7 @@ if(@$_GET['matching_mode']){
         // we may or may not have added three columns to the start of that
         // file depending on if it already had them 
         $in = fopen($input_file_path, 'r');
-        $in_header = fgetcsv($in);
+        $in_header = fgetcsv($in, escape: "\\");
         fclose($in);
 
         if(preg_match('/wfo_id$/', $in_header[0])){
@@ -439,7 +439,7 @@ if(file_exists($input_file_path)){
     
         // get the first line of the file
         $in_file = fopen($input_file_path, 'r');
-        $header = fgetcsv($in_file);
+        $header = fgetcsv($in_file, escape: "\\");
         fclose($in_file);
 ?>
         <tr>

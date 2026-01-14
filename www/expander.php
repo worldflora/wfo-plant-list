@@ -89,7 +89,7 @@ if(file_exists($input_file_path)){
 
     // if we are starting an new output file then put in a header row
     if($offset == 0){
-        $header = fgetcsv($in);
+        $header = fgetcsv($in, escape: "\\");
         $header = array_merge($header, $selected_fields);
         fputcsv($out, $header, escape: "\\");
     }else{
@@ -98,7 +98,7 @@ if(file_exists($input_file_path)){
 
     // work through the input file
     $counter = 0;
-    while($line = fgetcsv($in)){
+    while($line = fgetcsv($in, escape: "\\")){
 
         $counter++;
         

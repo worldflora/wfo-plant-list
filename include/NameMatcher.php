@@ -554,11 +554,28 @@ class NameMatcher extends PlantList{
 
                 $response->narrative[] = "But " . count($response->candidates) . " candidates found.";
 
-                if(count($response->candidates) == 1 && @$this->params->acceptSingleCandidate){
-                    // a single candidate and that will do for them!
-                    $response->narrative[] = "A single candidate found and acceptSingleCandidate is true so it becomes the match.";
-                    $response->match = $response->candidates[0];
-                    $response->candidates = array();
+                // if we only have a single candidate then there are cases where we treat that as the match
+                if(count($response->candidates) == 1){
+
+                    // they selected that one candidate is enough
+                    if(@$this->params->acceptSingleCandidate){
+                        $response->narrative[] = "A single candidate found and acceptSingleCandidate is true so it becomes the match.";
+                        $response->match = $response->candidates[0];
+                        $response->candidates = array();
+                    }
+
+                    // they have asked to return all homonyns and we have a good match (including the author string)
+                    if(@$this->params->checkHomonyms){
+                        $response->narrative[] = "A single candidate found and checkHomonyms is true so checking authors strings so see if this is a match.";
+                        $lev = levenshtein($response->candidates[0]->getAuthorsString(), $response->parsedName->author_string);
+                        if ($lev <= $this->params->fuzzyAuthors){
+                            $response->narrative[] = "Authors match with a Levenshtein distance of {$lev} so making candidate into the match.";
+                            $response->match = $response->candidates[0];
+                            $response->candidates = array();
+                        }else{
+                            $response->narrative[] = "Authors do not match with a Levenshtein distance of {$lev} so it stays a candidate.";
+                        }
+                    }
                 }
 
             }else{

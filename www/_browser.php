@@ -4,6 +4,9 @@
 // in the config.
 $over_ride_classification = 1;
 
+// disable this to stop crawlers
+exit();
+
 require_once('config.php');
 require_once('../include/PlantList.php');
 require_once('../include/TaxonRecord.php');

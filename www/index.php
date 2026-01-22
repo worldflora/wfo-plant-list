@@ -61,9 +61,9 @@ require_once('header.php');
         specimens and databases) associated with a list of matched names.</li>
     <li><a href="stats.php" />Statistics</a>: A break down of the numbers of names and taxa in the index.</li>
     <li><a href="ranks.php" />Ranks</a>: A list of the ranks used in the list.</li>
+<!--
     <li><a href="browser.php" />Browser</a>: A simple text based tool for exploring the data in the index.</li>
-
-
+-->
 
 </ul>
 

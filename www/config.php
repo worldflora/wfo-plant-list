@@ -11,15 +11,19 @@ error_reporting(E_ALL & ~E_DEPRECATED);
 session_start();
 
 define('WFO_SERVICE_VERSION','2.0.1');
-
-// whether to expose facet browsing
-// should be defined in wfo_secrets but set default just incase.
-if(!defined("WFO_FACET_BROWSE_ON")){
-  define('WFO_FACET_BROWSE_ON', false);
-}
+define('WFO_ADMINISTRATOR_EMAIL', 'rhyam@rbge.org.uk');
 
 // Location of the solr server
 define('SOLR_QUERY_URI', $solr_query_uri); // from wfo_secrets.php
+
+define('API_BEARER_TOKENS', $api_bearer_tokens);
+define('API_SYNC_PAGE_SIZE', 500); // used when client calls to have a copy of this source index
+
+// a file full of queue jumpers to be indexed at the start of the next run.
+// this file is shared with the website front end.
+// Indeed it is written by that application for us to pick up.
+// must be www-data readable
+define('INDEX_QUEUE_FILE_PATH', '../../wfo-p2/data/index_queue.txt'); 
 
 // used for lookups and other services that don't want to 
 // trouble themselves with many versions of backbone
@@ -33,78 +37,6 @@ if(isset($over_ride_classification) && isset($default_classification_versions[$o
 define('SOLR_USER', $solr_user); // from wfo_secrets.php
 define('SOLR_PASSWORD', $solr_password); // from wfo_secrets.php
 
-// facets to used
-// these are a list of the field names IDs to use
-// in the order provided
-$facet_ids = array(
-  "wfo-f-5_ss", // Life form
-  "wfo-f-2_ss", // Countries ISO
-  "wfo-f-8_ss", // TDWG Countries
-  "wfo-f-10_ss", // IUCN Statuses
-  "role_s",
-  "rank_s",
-  "placed_in_phylum_s",
-  "placed_in_family_s",
-  "placed_in_genus_s",
-  "nomenclatural_status_s"
-);
-
-// this ensures that we have 
-// the names of the facets and facet values
-// cached in the session and refreshed every
-// now and then.
-
-// we only do it if faceting is on
-if(WFO_FACET_BROWSE_ON){
-
-    // the facets cache
-    $facets_cache = @$_SESSION['facets_cache'];
-
-    if(!$facets_cache || @$_GET['facet_cache_refresh'] == 'true'){
-
-        $facets_cache = array();
-
-        $query = array(
-            'query' => "kind_s:wfo-facet",
-            'limit' => 10000
-        );
-      
-        $docs  = PlantList::getSolrDocs($query);
-        foreach($docs as $doc){
-            $facets_cache[$doc->id] = json_decode($doc->json_t);
-        }
-
-        $_SESSION['facets_cache'] = $facets_cache;
-
-
-    }
-
-
-    // we do the same for sources of info
-    $sources_cache = @$_SESSION['sources_cache'];
-
-    if(!$sources_cache || @$_GET['sources_cache_refresh'] == 'true'){
-        
-        $sources_cache = array();
-
-        $query = array(
-            'query' => "kind_s:wfo-facet-source",
-            'limit' => 10000
-        );
-      
-        $docs  = PlantList::getSolrDocs($query);
-      
-          foreach($docs as $doc){
-              $sources_cache[$doc->id] = json_decode($doc->json_t);
-          }
-
-          $_SESSION['sources_cache'] = $sources_cache;
-
-    }
-
-} // end of facet browsing test
-
-
 // used all over to generate guids
 function get_uri($taxon_id){
   if(php_sapi_name() === 'cli'){
@@ -113,7 +45,6 @@ function get_uri($taxon_id){
     return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/" . $taxon_id;
   }
 }
-
 
 // copy of ranks table from management app
 // FIXME need a way of sharing this efficiently between 

@@ -1,7 +1,8 @@
+<?php
+require_once('config.php');
+?>
 <script src="https://www.gstatic.com/charts/loader.js"></script>
 <?php
-
-require_once('config.php');
 require_once('../include/PlantList.php');
 require_once('header.php');
 

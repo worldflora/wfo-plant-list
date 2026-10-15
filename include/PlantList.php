@@ -82,6 +82,23 @@ class PlantList{
         return trim(substr($response, strpos($response, "\r\n\r\n")));
     }
 
+    public static function getSolrDoc($id){
+
+        $id = trim($id);
+
+        // load it by id
+        $solr_query_uri = SOLR_QUERY_URI . '/get?id=' . trim($id);
+        $ch = PlantList::getCurlHandle($solr_query_uri);
+        $response = PlantList::runCurlRequest($ch);
+        if(isset($response->body)){
+            $body = json_decode($response->body);
+            if(isset($body->doc)){
+                return $body->doc;                
+            }
+        }
+        return null;
+    }
+
     /**
      * 
      * 
@@ -151,5 +168,19 @@ class PlantList{
             return $response->facets->classifications->buckets[0]->val;
 
     }
+
+    public static function saveSolrDocs($solr_docs, $commit = true){
+        $solr_query_uri = SOLR_QUERY_URI . '/update?commit='. ($commit ? 'true': 'false');
+        $response = PlantList::curlPostJson($solr_query_uri, json_encode($solr_docs));
+        return $response;
+    }
+
+    public static function deleteSolrDocs($query, $commit = true){
+        $solr_query_uri = SOLR_QUERY_URI . '/update?commit='. ($commit ? 'true': 'false');
+        $response = PlantList::curlPostJson($solr_query_uri, json_encode($query));
+        return $response;
+    }
+
+
 
 }

@@ -2,6 +2,7 @@
 
 require_once('config.php');
 require_once('../include/PlantList.php');
+require_once('../include/Classification.php');
 require_once('../include/TaxonRecord.php');
 require_once('../include/content_negotiate.php'); // handles content negotiation so saves us having .htaccess
 
@@ -20,6 +21,42 @@ require_once('header.php');
     It is intended for those who are comfortable working with simple (not pretty) HTML forms or who want to exploit
     the REST or GraphQL APIs.
 </p>
+<?php
+    $classification = Classification::getById("DEFAULT");
+
+    if($classification){
+        $taxonomy_ts = $classification->taxonomyLastIndexed();
+        if($taxonomy_ts){
+            $dt = new DateTime();
+            $dt->setTimestamp($taxonomy_ts);
+            $taxonomy_created = $dt->format("l jS F Y @ H:i:s");
+        }else{
+            $taxonomy_created = 'never';
+        }
+
+        $content_ts = $classification->contentLastIndexed();
+        if($content_ts){
+            $dt = new DateTime();
+            $dt->setTimestamp($content_ts);
+            $content_updated = $dt->format("l jS F Y @ H:i:s");
+        }else{
+            $content_updated = 'never';
+        }
+?>
+<p>
+    The classification on this index core was created on <strong><?php echo $taxonomy_created; ?></strong>.
+</p>
+<p>
+    The last time descriptive content was updated on this index core was <strong><?php echo $content_updated; ?></strong>.
+</p>
+
+<?php
+    }else{
+       $dv = WFO_DEFAULT_VERSION;
+       echo "<p style=\"color: red;\">Classification {$dv} not found. </p>";
+    }
+?>
+
 
 <h2>Are you in the right place?</h2>
 

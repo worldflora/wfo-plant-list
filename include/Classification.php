@@ -78,7 +78,11 @@ class Classification extends PlantList{
         }
 
         if($classification_id == 'DEFAULT'){
-            return self::$loaded[WFO_DEFAULT_VERSION];
+            if(array_key_exists(WFO_DEFAULT_VERSION, self::$loaded)){
+                return self::$loaded[WFO_DEFAULT_VERSION];
+            }else{
+                return null;
+            }
         }
 
         if(array_key_exists($classification_id, self::$loaded)){
@@ -114,7 +118,6 @@ class Classification extends PlantList{
         );
         $docs = PlantList::getSolrDocs($query);
 
-
         $phyla = array();
 
         // error_log(print_r($response->response->docs, true));
@@ -128,6 +131,53 @@ class Classification extends PlantList{
 
         return $phyla;
 
+    }
+
+    public function taxonomyLastIndexed(){
+
+        $query = array(
+            'query' => '*:*',
+            'filter' => array(
+                "classification_id_s:{$this->id}"
+            ),
+            'fields' => array('solr_import_dt'),
+            'sort' => 'solr_import_dt DESC',
+            'limit' => 1
+        );
+        $docs = PlantList::getSolrDocs($query);
+
+        // if we don't have anything we return null
+        if(count($docs) == 0) return null;
+
+        $t = strtotime($docs[0]->solr_import_dt);
+
+        if(!$t) return null;
+
+        return $t;
+
+    }
+
+    public function contentLastIndexed(){
+
+        $query = array(
+            'query' => 'fyllo_last_indexed_dt:[* TO *]',
+            'filter' => array(
+                "classification_id_s:{$this->id}"
+            ),
+            'fields' => array('fyllo_last_indexed_dt'),
+            'sort' => 'fyllo_last_indexed_dt DESC',
+            'limit' => 1
+        );
+        $docs = PlantList::getSolrDocs($query);
+
+        // if we don't have anything we return null
+        if(count($docs) == 0) return null;
+
+        $t = strtotime($docs[0]->fyllo_last_indexed_dt);
+
+        if(!$t) return null;
+
+        return $t;
     }
 
 

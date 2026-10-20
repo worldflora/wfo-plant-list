@@ -61,7 +61,23 @@ class ClassificationType extends ObjectType
                             return $classification->getPhyla();
                         },
                         'description' => "The top level taxa in this classification at the rank of Phylum. Earlier classifications weren't joined up to phylum level so this may be blank for them."
-                    ]
+                    ],
+                    'taxonomyLastIndexed' => [
+                        'type' => Type::int(),
+                        'resolve' => function($classification){
+                            // we load the name if we need to!
+                            return $classification->taxonomyLastIndexed();
+                        },
+                        'description' => "The datetime (as a unix timestamp) this classification (not descriptive content) was exported from Rhakhis."
+                    ],
+                    'contentLastIndexed' => [
+                        'type' => Type::int(),
+                        'resolve' => function($classification){
+                            // we load the name if we need to!
+                            return $classification->contentLastIndexed();
+                        },
+                        'description' => "The datetime (as a unix timestamp) the descriptive content (not taxonomy) of this classification was last updated."
+                    ],
                 ];
             }
         ];

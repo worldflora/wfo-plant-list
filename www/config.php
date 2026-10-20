@@ -9,7 +9,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL & ~E_DEPRECATED);
 //error_reporting(E_ALL);
 session_start();
-
+  
 define('WFO_SERVICE_VERSION','2.0.1');
 define('WFO_ADMINISTRATOR_EMAIL', 'rhyam@rbge.org.uk');
 
@@ -25,14 +25,7 @@ define('API_SYNC_PAGE_SIZE', 500); // used when client calls to have a copy of t
 // must be www-data readable
 define('INDEX_QUEUE_FILE_PATH', '../../wfo-p2/data/index_queue.txt'); 
 
-// used for lookups and other services that don't want to 
-// trouble themselves with many versions of backbone
-// will normally be set to the most recent.
-if(isset($over_ride_classification) && isset($default_classification_versions[$over_ride_classification])){
-  define('WFO_DEFAULT_VERSION',$default_classification_versions[$over_ride_classification]);
-}else{
-  define('WFO_DEFAULT_VERSION',$default_classification_versions[0]);
-}
+define('WFO_DEFAULT_VERSION',$default_classification_version);
 
 define('SOLR_USER', $solr_user); // from wfo_secrets.php
 define('SOLR_PASSWORD', $solr_password); // from wfo_secrets.php

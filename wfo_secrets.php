@@ -11,19 +11,23 @@ If you want to place it anywhere else you will need to adjust the path in config
 
 */
 
-$solr_query_uri = "http://localhost:8983/solr/wfo-api";
+$solr_query_uri = "http://localhost:8983/solr/***";
 $solr_user = '***';
 $solr_password = '***';
 
-$default_classification_version = "9999-01"; // zero indexed is used if not overridden.
+$default_classification_version = "***"; // the classification to use (the index may contain many)
 
-$plant_list_system_message = "Roger's dev server. Classification id: " . $default_classification_version;
+
+// set system message if one is needed
+// $plant_list_system_message = "**** Classification id: " . $default_classification_version;
+$plant_list_system_message = null;
+
 // set up bearer tokens used for reading or writing the index
 // each token is associated with an array of rights (usually just read or write)
 // https://randomkeygen.com/
 $api_bearer_tokens = array(
-	'NCS2nPKRwP9v9FIZs02AKB4pZuXKow1Bc2mXTehh8QPKZBE5HGBB3DBa' => array('write', 'read'),
-	'roger_local_read_NA65YBPzYCyOZbZUUXFmE5LOtJmrERGL' => array('read'	)
+	'*****' => array('write', 'read'),
+	'*****' => array('read'	)
 );
 	
 ?>

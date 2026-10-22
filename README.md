@@ -53,7 +53,6 @@ sudo mkdir wfo-home/
 sudo chown -R <user>:root wfo-home/
 cd wfo-home
 git clone https://github.com/worldflora/wfo-plant-list.git
-cd ..
 cp wfo-plant-list/wfo_secrets.php .
 nano wfo_secrets.php
 ```
@@ -62,10 +61,53 @@ nano wfo_secrets.php
 
 The application needs some packages that are managed using Composer. Install Composer following the instructions here https://getcomposer.org/download/ 
 
+Then
 
+`sudo mv composer.phar /usr/local/bin/composer`
 
-Then run `php composer.phar update` to install dependencies.
+Then
 
+```
+cd /var/wfo-home/wfo-plant-list/
+composer update
+```
+Which will install dependencies in the `vendor/` directory.
+
+#### Configuring Apache
+
+This is more or a systems administration section than application installation. There is an `.htaccess` file in /var/wfo-home/wfo-plant-list/www that gives mod-rewrite rules for the application itself so you need to make sure that is honoured. Otherwise it is just a regular virtual host set up for a www directory in the application.
+
+An HTTP (port 80 version would look like this)
+
+```
+<VirtualHost *:80>
+
+      ServerName list.worldfloraonline.org
+
+      ServerAdmin rhyam@rbge.org.uk
+      DocumentRoot /var/wfo-home/wfo-plant-list/www
+
+      <Directory />
+             Options FollowSymLinks
+             AllowOverride None
+      </Directory>
+
+      <Directory /var/wfo-home/wfo-plant-list/www/>
+             Options Indexes FollowSymLinks
+             AllowOverride All
+             Require all granted
+      </Directory>
+
+      ErrorLog ${APACHE_LOG_DIR}/wfo-list-api-error.log
+      CustomLog ${APACHE_LOG_DIR}/wfo-list-api-access.log combined
+
+      # we would never actually server on plain http but redirect to https version
+      RewriteEngine on
+      RewriteCond %{SERVER_NAME} =test01.worldfloraonline.org
+      RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
+
+</VirtualHost>
+```
 
 
 

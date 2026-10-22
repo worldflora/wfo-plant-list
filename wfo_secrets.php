@@ -11,9 +11,9 @@ If you want to place it anywhere else you will need to adjust the path in config
 
 */
 
-$solr_query_uri = "http://localhost:8983/solr/***";
-$solr_user = '***';
-$solr_password = '***';
+$solr_query_uri = "http://localhost:8983/solr/wfo";
+$solr_user = '***'; // the user you set up for solr access
+$solr_password = '***'; // their password
 
 $default_classification_version = "***"; // the classification to use (the index may contain many)
 

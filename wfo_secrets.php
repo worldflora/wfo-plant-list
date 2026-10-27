@@ -29,5 +29,10 @@ $api_bearer_tokens = array(
 	'*****' => array('write', 'read'),
 	'*****' => array('read'	)
 );
+
+// if this install is a client then set the url of the source for data.
+$api_sync_source_url = null;
+// if this install is a client then set an API token with read rights in source
+$api_sync_source_token = null;
 	
 ?>

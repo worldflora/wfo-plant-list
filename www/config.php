@@ -19,8 +19,12 @@ define('WFO_ADMINISTRATOR_EMAIL', 'rhyam@rbge.org.uk');
 // Location of the solr server
 define('SOLR_QUERY_URI', $solr_query_uri); // from wfo_secrets.php
 
-define('API_BEARER_TOKENS', $api_bearer_tokens);
+define('API_BEARER_TOKENS', $api_bearer_tokens); // used by systems calling this app - do we trust them
 define('API_SYNC_PAGE_SIZE', 500); // used when client calls to have a copy of this source index
+
+// if this is the client then these are the credentials needed to call the source
+define('API_SYNC_SOURCE_URL', isset($api_sync_source_url) ? $api_sync_source_url: null);
+define('API_SYNC_SOURCE_TOKEN', isset($api_sync_source_token) ? $api_sync_source_token: null);
 
 // a file full of queue jumpers to be indexed at the start of the next run.
 // this file is shared with the website front end.

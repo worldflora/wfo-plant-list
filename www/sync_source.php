@@ -28,9 +28,7 @@ require_once('../include/BearerToken.php');
 require_once('../include/PlantList.php');
 
 // not authorized you can go away
-if(BearerToken::authorized('read')){
-   $greater_than = $_GET['greater_than']; 
-}else{
+if(!BearerToken::authorized('read')){
     header("HTTP/1.1 403 Forbidden");
     echo '<h1>403 Forbidden</h1>';
     echo "<p>You must supply a valid API bearer token.";
@@ -45,6 +43,7 @@ if( !isset($_GET['greater_than']) || !is_numeric($_GET['greater_than']) ){
     exit;
 }
 
+$greater_than = $_GET['greater_than']; 
 
 // build a query of what we want
 $query = array(

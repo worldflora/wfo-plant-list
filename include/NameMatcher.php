@@ -392,8 +392,17 @@ class NameMatcher extends PlantList{
         // they are all candidates
         if($docs){
             foreach($docs as $doc){
+
                 $doc->asName = true;
-                $response->candidates[] = new TaxonRecord($doc);
+                $t = new TaxonRecord($doc);
+                
+                // if we have a rank we only add the names that match the rank
+                if($response->parsedName->rank && $t->getRank() != $response->parsedName->rank ){
+                    $response->narrative[] = "Discarding {$t->getFullNameStringPlain()} as wrong rank.";
+                    continue;
+                }
+
+                $response->candidates[] = $t; 
             }
         }
 

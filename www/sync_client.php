@@ -17,7 +17,6 @@ require_once('../include/PlantList.php');
 
 
 /*
-
     This can be triggered in two ways.
 
     1) It can be called by a cron job on the local machine.
@@ -49,7 +48,7 @@ $query = array(
 $docs = PlantList::getSolrDocs($query);
 
 if($docs){
-    $greater_than = $docs[0]->_source_version_;
+    $greater_than = $docs[0]->_source_version_[0];
 }else{
     // we didn't find any with _source_version_ so we are a clean index
     log_progress('message', "No previously sync'd docs found.");
@@ -62,7 +61,7 @@ log_progress('greater_than', $greater_than);
 
 log_progress('source_url', API_SYNC_SOURCE_URL);
 
-$ch = curl_init(API_SYNC_SOURCE_URL);
+$ch = curl_init(API_SYNC_SOURCE_URL . "?greater_than={$greater_than}");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_USERAGENT, 'WFO Plant List');
 curl_setopt($ch, CURLOPT_HEADER, 1);
@@ -74,20 +73,38 @@ log_progress('calling_source', time());
 $response = curl_exec($ch);
 if(curl_errno($ch)){
     log_progress('curl_error', curl_error($curl));
-}else{
-    print_r($response);
-
 }
+log_progress('source_responded', time());
 
-// remove the _version_fields
+$info = curl_getinfo($ch);
+$body = trim(substr($response, $info["header_size"]));
+$docs = json_decode($body);
+
+log_progress("docs_retrieved", count($docs));
+
+// remove the _version_ fields
+$highest = 0;
+for ($i=0; $i < count($docs); $i++) { 
+    $docs[$i]->_source_version_ = $docs[$i]->_version_;
+    unset($docs[$i]->_version_);
+    if($docs[$i]->_source_version_ > $highest) $highest = $docs[$i]->_source_version_;
+}
+log_progress("highest_version", $highest);
 
 // store them in ourselves
+log_progress("start_insert", time());
+PlantList::saveSolrDocs($docs, true); // commit after insert
+log_progress("finish_insert", time());
 
+// stamp the finish time
 log_progress('finish', time());
 
+// write it out as json if we are called over https
 if (php_sapi_name() != "cli"){
     header('Content-Type: application/json');
     echo json_encode($out);
+}else{
+    echo "\n-----------\n";
 }
 
 exit;

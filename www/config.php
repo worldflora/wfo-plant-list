@@ -34,6 +34,8 @@ define('INDEX_QUEUE_FILE_PATH', '../../wfo-p2/data/index_queue.txt');
 
 define('WFO_DEFAULT_VERSION',$default_classification_version);
 
+define('WFO_MIRROR_SITES', isset($mirror_sites) ? $mirror_sites : null);
+
 define('SOLR_USER', $solr_user); // from wfo_secrets.php
 define('SOLR_PASSWORD', $solr_password); // from wfo_secrets.php
 

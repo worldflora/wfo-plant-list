@@ -7,7 +7,11 @@
 // path should be of the form /wfo-id/format or /terms/
 $path_parts = explode('/', $_SERVER["REQUEST_URI"]);
 array_shift($path_parts); // lose the first blank one
-$wfo = $path_parts[0];
+
+// we may have a query string
+$parts = explode('?', $path_parts[0]);
+$wfo = $parts[0];
+
 
 // are they are asking for reconciliation service?
 if(preg_match('/^reconcile/', $wfo)){
@@ -110,36 +114,71 @@ if(
 
     if(!$format_string){
         
-        // they haven't passed a format request 
-        // so we assume they are human and pass them 
-        // to the Plant List pages
-        
-        if(preg_match('/^[0-9]{4}-[0-9]{2}$/', $wfo)){
-            // they are just asking for a classification
-            $redirect_url = "https://wfoplantlist.org/plant-list/" . $path_parts[0];
+        // they haven't passed a format request  so we assume they are human 
+
+        // Where we send them depends on the utm_source - this allows for test sites and mirrors
+        $utm_source = @$_GET['utm_source'];
+
+        if($utm_source && array_key_exists($utm_source, WFO_MIRROR_SITES)){
+
+            /*
+                We will only get a utm_source with the new versions of the site
+            */
+            $target_server = WFO_MIRROR_SITES[$utm_source];
+            
+            $redirect_url = $target_server . $wfo;
+
+
         }else{
 
-            switch ($record->getRole()) {
-                case 'accepted':
-                    $redirect_url = "https://wfoplantlist.org/plant-list/taxon/{$record->getId()}";
-                    break;
-                case 'synonym':
-                    $syn_wfo = substr($record->getId(), 0, 14);
-                    $redirect_url = "https://wfoplantlist.org/plant-list/taxon/{$record->getAcceptedId()}?matched_id={$syn_wfo}";
-                    break;
-                case 'unplaced':
-                    $redirect_url = "https://wfoplantlist.org/plant-list/taxon/{$record->getId()}";
-                    break;
-                case 'deprecated':
-                    $redirect_url = "https://wfoplantlist.org/plant-list/taxon/{$record->getId()}";
-                    break;
-                default:
-                    echo "Unknown role type: {$record->getRole()}";
-                    exit;
-                    break;
+
+            /*
+                Legacy routing for the PlantList 
+                This will be replaced.
+
+                At the same time the new portal must be able to handle the full range of URLs that might be sent to it
+
+                There is an issue to sort this:
+                
+                https://github.com/worldflora/wfo-p2/issues/42
+
+            */
+
+            if(preg_match('/^[0-9]{4}-[0-9]{2}$/', $wfo)){
+                // they are just asking for a classification
+                $redirect_url = "https://wfoplantlist.org/plant-list/" . $path_parts[0];
+            }else{
+
+                switch ($record->getRole()) {
+                    case 'accepted':
+                        $redirect_url = "https://wfoplantlist.org/plant-list/taxon/{$record->getId()}";
+                        break;
+                    case 'synonym':
+                        $syn_wfo = substr($record->getId(), 0, 14);
+                        $redirect_url = "https://wfoplantlist.org/plant-list/taxon/{$record->getAcceptedId()}?matched_id={$syn_wfo}";
+                        break;
+                    case 'unplaced':
+                        $redirect_url = "https://wfoplantlist.org/plant-list/taxon/{$record->getId()}";
+                        break;
+                    case 'deprecated':
+                        $redirect_url = "https://wfoplantlist.org/plant-list/taxon/{$record->getId()}";
+                        break;
+                    default:
+                        echo "Unknown role type: {$record->getRole()}";
+                        exit;
+                        break;
+                }
+
             }
 
+            /*
+                End of legacy routing
+            */
+
         }
+
+        
+
 
     }else{
 
